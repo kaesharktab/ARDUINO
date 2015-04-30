@@ -1,0 +1,8 @@
+KeyPad	KEYWORD1
+
+setColPins	KEYWORD2
+setRowPins	KEYWORD2
+setKeyChars	KEYWORD2
+setDebounceDelay	KEYWORD2
+readKeys	KEYWORD2
+readRaw	KEYWORD2

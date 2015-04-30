@@ -43,7 +43,7 @@ int pwm1_out = 9;    // LED connected to digital pin 9
 // Declare which fonts we will be using
 extern uint8_t SmallFont[];
 
-UTFT myGLCD(TFT01_32,38,39,40,41);  // Remember to change the model parameter to suit your display module!
+UTFT myGLCD(TFT01_50,38,39,40,41);  // Remember to change the model parameter to suit your display module!
 UTFT_tinyFAT myFiles(&myGLCD);
 
 // List of filenames for pictures to display. 
@@ -67,7 +67,7 @@ UTFT_Buttons  myButtons(&myGLCD, &myTouch);
 void setup()
 {
     pinMode(ledPin, OUTPUT);
-  myGLCD.InitLCD();
+  myGLCD.InitLCD(PORTRAIT);
   myGLCD.clrScr();
   myGLCD.setFont(SmallFont);
 
