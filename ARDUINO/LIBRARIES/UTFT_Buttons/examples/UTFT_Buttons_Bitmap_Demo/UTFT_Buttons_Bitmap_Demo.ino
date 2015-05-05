@@ -39,7 +39,7 @@ extern imagedatatype cat[];
 extern imagedatatype dog[];
 extern imagedatatype bird[];
 extern imagedatatype monkey[];
-
+extern imagedatatype aw4[];
 // Set up UTFT...
 // Set the pins to the correct ones for your development board
 // -----------------------------------------------------------
@@ -81,13 +81,14 @@ void setup()
 
 void loop()
 {
-  int but1, but2, but3, but4, but5, pressed_button;
+  int but1, but2, but3, but4, but5,but6, pressed_button;
   
   but1 = myButtons.addButton( 10,  10, 80,  60, cat);
   but2 = myButtons.addButton( 120,  10, 80,  60, dog);
   but3 = myButtons.addButton( 10,  80, 80,  60, bird);
   but4 = myButtons.addButton( 120,  80, 80,  60, monkey, BUTTON_NO_BORDER);
   but5 = myButtons.addButton( 10, 150, 190, 30, "Disable Dog");
+  but6 = myButtons.addButton(300,  10, 80,  60, aw4);
   myButtons.drawButtons();
 
   myGLCD.print("You pressed:", 10, 200);
