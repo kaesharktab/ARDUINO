@@ -34,14 +34,14 @@ extern uint8_t BigFont[];
 extern uint8_t Dingbats1_XL[];
 
 int cont = 0;
-int sensorTD2 = A0;    // select the input pin for the analog input
-int sensorTD2AW4Value = 0;  // variable to store the value coming from the sensor
-int sensorTD1 = A1;    // select the input pin for the analog input
-int sensorTD1Value = 0;  // variable to store the value coming from the sensor
+int sensorTD2 = A0;            // Entrada analogica A0 arduino mega pin0  sensor  TD2
+int sensorTD2AW4Value = 0;    // variable to store the value coming from the sensor
+int sensorTD1 = A1;          // Entrada analogica A1 arduino mega pin1  sensor  TD1
+int sensorTD1Value = 0;      // variable to store the value coming from the sensor
 int ledPin = 11;
 
-int pwm1_out = 9;    // LED connected to digital pin 9
-int pwm2_out = 10;    // LED connected to digital pin 9
+int pwm1_out = 9;    // Salida pwm1 para valvula de llenado aw4 EV7 arduino mega pin9
+int pwm2_out = 10;    // Salida pwm2 para valvula de vaciado aw4 EV8 arduino mega pin10
 
 // Declare which fonts we will be using
 extern uint8_t SmallFont[];
@@ -91,7 +91,7 @@ void loop()
   int cont = 0;
   int cont2 = 0;
 
-  //  foto_presentacion();
+ foto_presentacion();
 
   menu_inicial(cont, cont2);
 
@@ -104,7 +104,7 @@ void loop()
 
 void foto_presentacion() {
 
-
+myFiles.loadBitmap(0, 0, picsize_x, picsize_y, "PIC301.RAW");
 
 }
 
@@ -127,10 +127,8 @@ void	menu_inicial(int cont, int cont2) {
   int AJUSTES, L3_button, AW4_button, pressed_button;
   boolean default_colors = true;
 
-  myGLCD.clrScr();
-  myGLCD.drawPixel(0, 0);
-  //  myFiles.loadBitmap(0, 0, picsize_x, picsize_y, "PIC301.RAW");
-  myButtons.deleteAllButtons();
+
+ myButtons.deleteAllButtons();
   myButtons.setTextFont(BigFont);
   AJUSTES = myButtons.addButton( 15,  235, 60,  60, ajustes);  //X, Y , LARGO, ANCHO
   L3_button = myButtons.addButton( 395,  235, 60,  60, l32);
@@ -443,28 +441,31 @@ void	menu_estanqueidad(int cont, int cont2) {
   myButtons.deleteAllButtons();
   myGLCD.clrScr();
 
-
+  myGLCD.setColor(VGA_PURPLE);
+  myGLCD.setFont(BigFont);
+  myGLCD.fillRect(220, 0, 579, 26);
+  myGLCD.setBackColor(VGA_PURPLE);
   myGLCD.setColor(VGA_WHITE);
+  myGLCD.print("PRUEBA DE ESTANQUEIDAD", CENTER, 5);
+  
+    myGLCD.setColor(VGA_WHITE);
   myGLCD.setBackColor(VGA_BLUE);
   myGLCD.setFont(BigFont);
-  myGLCD.print("PRUEBA DE ESTANQUEIDAD", CENTER, 5);
-  myGLCD.setFont(SmallFont);
-  myGLCD.print("PRESION ENTRADA TD1", 10, 50);
-  myGLCD.print("valor", 175, 50);
-  myGLCD.print("bar", 225, 50);
+  myGLCD.print("PRESION ENT TD1", 1, 90);
+  myGLCD.print("VALOR", 1,110);
+  myGLCD.print("BAR", 85,110);
   myGLCD.setColor(VGA_LIME);
-  myGLCD.fillCircle(270, 56, 15);
+  myGLCD.fillCircle(160, 125, 15);//X, Y , RADIO
 
   myGLCD.setColor(VGA_WHITE);
   myGLCD.setBackColor(VGA_BLUE);
   myGLCD.print("I.TRABAJO:700mA", CENTER, 50);
 
-  myGLCD.print("I.REAL:", 500, 50);
-  myGLCD.print("valor", 575, 50);
-  myGLCD.print("mA", 625, 50);
+  myGLCD.print("I.REAL:", 680, 90);
+  myGLCD.print("VALOR", 660, 110);
+  myGLCD.print("mA", 745, 110);
   myGLCD.setColor(VGA_LIME);
-  myGLCD.fillCircle(670, 56, 15);
-
+  myGLCD.fillCircle(630, 125, 15);
 
   myGLCD.setFont(BigFont);
   myGLCD.fillRect(20, 250, 250, 300);
@@ -639,10 +640,10 @@ void	menu_regulacionAW4(int cont, int cont2) {
   myGLCD.print("0BAR", 435, 414);
 
 
-  HOME = myButtons.addButton( 0, 0, 60,  60, casa);
+  HOME = myButtons.addButton( 1, 0, 60,  60, casa);
   myButtons.drawButton(HOME);
 
-   BACK = myButtons.addButton( 62, 0, 60,  60, atras);
+   BACK = myButtons.addButton( 63, 0, 60,  60, atras);
    myButtons.drawButton(BACK);
 
   while (1)
