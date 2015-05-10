@@ -21,7 +21,7 @@
 //      480x272
 //      800x480
 
-
+#include <TocaMelodia.h>
 #include <UTFT.h>
 #include <UTouch.h>
 #include <UTFT_Buttons.h>
@@ -39,6 +39,10 @@ int sensorTD2AW4Value = 0;    // variable to store the value coming from the sen
 int sensorTD1 = A1;          // Entrada analogica A1 arduino mega pin1  sensor  TD1
 int sensorTD1Value = 0;      // variable to store the value coming from the sensor
 int ledPin = 11;
+//TocaMelodia tocaMelodia(12);  // Inicializamos el altavoz, indicando en el pin12
+int speakerPin = 12;
+
+
 
 int pwm1_out = 9;    // Salida pwm1 para valvula de llenado aw4 EV7 arduino mega pin9
 int pwm2_out = 10;    // Salida pwm2 para valvula de vaciado aw4 EV8 arduino mega pin10
@@ -54,7 +58,7 @@ UTFT_tinyFAT myFiles(&myGLCD);
 
 int picsize_x, picsize_y;
 boolean display_rendertime = false; // Set this to true if you want the rendertime to be displayed after a picture is loaded
-boolean display_filename = true; // Set this to false to disable showing of filename
+boolean display_filename = false; // Set this to false to disable showing of filename
 
 word res;
 long sm, em;
@@ -64,6 +68,7 @@ UTouch        myTouch(6, 5, 4, 3, 2);
 UTFT_Buttons  myButtons(&myGLCD, &myTouch);
 void setup()
 {
+  pinMode(speakerPin, OUTPUT);
   pinMode(ledPin, OUTPUT);
   delay(100);
   myGLCD.InitLCD();
@@ -71,7 +76,7 @@ void setup()
   myGLCD.setFont(SmallFont);
 
   myTouch.InitTouch();
-  myTouch.setPrecision(PREC_MEDIUM);
+  myTouch.setPrecision(PREC_HI);
 
   myButtons.setTextFont(SmallFont);
   myButtons.setSymbolFont(Dingbats1_XL);
@@ -91,7 +96,7 @@ void loop()
   int cont = 0;
   int cont2 = 0;
 
- foto_presentacion();
+  foto_presentacion();
 
   menu_inicial(cont, cont2);
 
@@ -104,8 +109,8 @@ void loop()
 
 void foto_presentacion() {
 
-myFiles.loadBitmap(0, 0, picsize_x, picsize_y, "PIC301.RAW");
-
+  //myFiles.loadBitmap(0, 0, picsize_x, picsize_y, "PIC301.RAW");
+  //  tocaMelodia.melodia(MELODIA_FANFARRIA);
 }
 
 //Menu inicial********************************************************************************************************************************
@@ -128,7 +133,7 @@ void	menu_inicial(int cont, int cont2) {
   boolean default_colors = true;
 
 
- myButtons.deleteAllButtons();
+  myButtons.deleteAllButtons();
   myButtons.setTextFont(BigFont);
   AJUSTES = myButtons.addButton( 15,  235, 60,  60, ajustes);  //X, Y , LARGO, ANCHO
   L3_button = myButtons.addButton( 395,  235, 60,  60, l32);
@@ -154,6 +159,7 @@ void	menu_inicial(int cont, int cont2) {
 
 
       if (pressed_button == AJUSTES) {
+        touch_click();
         myButtons.deleteAllButtons();
         menu_ajustes(cont, cont2);
 
@@ -161,12 +167,14 @@ void	menu_inicial(int cont, int cont2) {
 
       }
       if (pressed_button == L3_button) {
+        touch_click();
         myButtons.deleteAllButtons();
         menu_l3(cont, cont2);
       }
 
 
       if (pressed_button == AW4_button) {
+        touch_click();
         myButtons.deleteAllButtons();
         menu_estanqueidad(cont, cont2);
       }
@@ -180,7 +188,7 @@ void	menu_inicial(int cont, int cont2) {
 //***************************MENU AJUSTES******************************************************************
 
 void	menu_ajustes(int cont, int cont2) {
-        myButtons.deleteAllButtons();
+  myButtons.deleteAllButtons();
   myGLCD.clrScr();
 
 #if defined(__AVR__)
@@ -230,7 +238,8 @@ void	menu_ajustes(int cont, int cont2) {
   PW2_DOWN = myButtons.addButton(350,  155, 130,  30, "PW2 DOWN");
   PW2_MENOS = myButtons.addButton(500,  155, 60,  30, "-10");
 
-  HOME = myButtons.addButton( 400,  200, 60, 60, casa); //X, Y , LARGO, ANCHO
+  HOME = myButtons.addButton(  738, 0, 60,  60, casa);
+
 
   myButtons.setButtonColors(VGA_WHITE, VGA_GRAY, VGA_WHITE, VGA_BLUE, VGA_RED);
 
@@ -270,7 +279,7 @@ void	menu_ajustes(int cont, int cont2) {
       //****bOTONES PWM1
 
       if (pressed_button == PW1_UP) {
-
+        touch_click();
         pwm1_value = pwm1_value + 1;
         analogWrite(pwm1_out, pwm1_value);
         myGLCD.print("     ", 40, 210);
@@ -278,7 +287,7 @@ void	menu_ajustes(int cont, int cont2) {
         myGLCD.printNumI(pwm1_value, 40, 210);
       }
       if (pressed_button == PW1_DOWN) {
-
+        touch_click();
         pwm1_value = pwm1_value - 1;
         analogWrite(pwm1_out, pwm1_value);
         myGLCD.print("     ", 40, 210);
@@ -287,7 +296,7 @@ void	menu_ajustes(int cont, int cont2) {
 
       //VALORES DIRECTOS  PWM1
       if (pressed_button == PW1_0) {
-
+        touch_click();
         pwm1_value = 0;
         analogWrite(pwm1_out, pwm1_value);
         myGLCD.print("     ", 40, 210);
@@ -295,14 +304,14 @@ void	menu_ajustes(int cont, int cont2) {
       }
 
       if (pressed_button == PW1_380) {
-
+        touch_click();
         pwm1_value = 97;
         analogWrite(pwm1_out, pwm1_value);
         myGLCD.print("     ", 40, 210);
         myGLCD.printNumI(pwm1_value, 40, 210);
       }
       if (pressed_button == PW1_700) {
-
+        touch_click();
         pwm1_value = 178;
         analogWrite(pwm1_out, pwm1_value);
         myGLCD.print("     ", 40, 210);
@@ -310,7 +319,7 @@ void	menu_ajustes(int cont, int cont2) {
       }
 
       if (pressed_button == PW1_1A) {
-
+        touch_click();
         pwm1_value = 255;
         analogWrite(pwm1_out, pwm1_value);
         myGLCD.print("     ", 40, 210);
@@ -319,7 +328,7 @@ void	menu_ajustes(int cont, int cont2) {
 
       //****bOTONES PWM1+-10
       if (pressed_button == PW1_MAS) {
-
+        touch_click();
         pwm1_value = pwm1_value + 10;
         analogWrite(pwm1_out, pwm1_value);
         myGLCD.print("     ", 40, 210);
@@ -327,7 +336,7 @@ void	menu_ajustes(int cont, int cont2) {
         myGLCD.printNumI(pwm1_value, 40, 210);
       }
       if (pressed_button == PW1_MENOS) {
-
+        touch_click();
         pwm1_value = pwm1_value - 10;
         analogWrite(pwm1_out, pwm1_value);
         myGLCD.print("     ", 40, 210);
@@ -337,7 +346,7 @@ void	menu_ajustes(int cont, int cont2) {
       //****bOTONES PWM2*******************************
 
       if (pressed_button == PW2_UP) {
-
+        touch_click();
         pwm2_value = pwm2_value + 1;
         analogWrite(pwm2_out, pwm2_value);
         myGLCD.print("     ", 350, 210);
@@ -345,7 +354,7 @@ void	menu_ajustes(int cont, int cont2) {
         myGLCD.printNumI(pwm2_value, 350, 210);
       }
       if (pressed_button == PW2_DOWN) {
-
+        touch_click();
         pwm2_value = pwm2_value - 1;
         analogWrite(pwm2_out, pwm2_value);
         myGLCD.print("     ", 350, 210);
@@ -354,7 +363,7 @@ void	menu_ajustes(int cont, int cont2) {
 
       //VALORES DIRECTOS  PWM2
       if (pressed_button == PW2_0) {
-
+        touch_click();
         pwm2_value = 0;
         analogWrite(pwm2_out, pwm2_value);
         myGLCD.print("     ", 350, 210);
@@ -362,14 +371,14 @@ void	menu_ajustes(int cont, int cont2) {
       }
 
       if (pressed_button == PW2_380) {
-
+        touch_click();
         pwm2_value = 97;
         analogWrite(pwm2_out, pwm2_value);
         myGLCD.print("     ", 350, 210);
         myGLCD.printNumI(pwm2_value, 350, 210);
       }
       if (pressed_button == PW2_700) {
-
+        touch_click();
         pwm2_value = 178;
         analogWrite(pwm2_out, pwm2_value);
         myGLCD.print("     ", 350, 210);
@@ -377,7 +386,7 @@ void	menu_ajustes(int cont, int cont2) {
       }
 
       if (pressed_button == PW2_1A) {
-
+        touch_click();
         pwm2_value = 255;
         analogWrite(pwm2_out, pwm2_value);
         myGLCD.print("     ", 350, 210);
@@ -388,7 +397,7 @@ void	menu_ajustes(int cont, int cont2) {
       //****bOTONES PWM2+-10
 
       if (pressed_button == PW2_MAS) {
-
+        touch_click();
         pwm2_value = pwm2_value + 10;
         analogWrite(pwm2_out, pwm2_value);
         myGLCD.print("     ", 350, 210);
@@ -396,14 +405,14 @@ void	menu_ajustes(int cont, int cont2) {
         myGLCD.printNumI(pwm2_value, 350, 210);
       }
       if (pressed_button == PW2_MENOS) {
-
+        touch_click();
         pwm2_value = pwm2_value - 10;
         analogWrite(pwm2_out, pwm2_value);
         myGLCD.print("     ", 350, 210);
         myGLCD.printNumI(pwm2_value, 350, 210);
       }
       if (pressed_button == HOME) {
-
+        touch_click();
         menu_inicial(cont, cont2);
       }
 
@@ -447,13 +456,13 @@ void	menu_estanqueidad(int cont, int cont2) {
   myGLCD.setBackColor(VGA_PURPLE);
   myGLCD.setColor(VGA_WHITE);
   myGLCD.print("PRUEBA DE ESTANQUEIDAD", CENTER, 5);
-  
-    myGLCD.setColor(VGA_WHITE);
+
+  myGLCD.setColor(VGA_WHITE);
   myGLCD.setBackColor(VGA_BLUE);
   myGLCD.setFont(BigFont);
   myGLCD.print("PRESION ENT TD1", 1, 90);
-  myGLCD.print("VALOR", 1,110);
-  myGLCD.print("BAR", 85,110);
+  myGLCD.print("VALOR", 1, 110);
+  myGLCD.print("BAR", 85, 110);
   myGLCD.setColor(VGA_LIME);
   myGLCD.fillCircle(160, 125, 15);//X, Y , RADIO
 
@@ -493,15 +502,17 @@ void	menu_estanqueidad(int cont, int cont2) {
   myButtons.setButtonColors(VGA_WHITE, VGA_GRAY, VGA_WHITE, VGA_BLUE, VGA_RED);
   myButtons.drawButton(VACIADO_PARO);
 
-  myGLCD.drawRect(300, 150, 430, 430);
+  myGLCD.setColor(VGA_WHITE);
+  myGLCD.setBackColor(VGA_BLUE);
+  myGLCD.drawRect(330, 150, 430, 430);
   myGLCD.print("10BAR", 435, 150);
   myGLCD.print("5BAR", 435, 280);
   myGLCD.print("0BAR", 435, 414);
 
-  FORWARD = myButtons.addButton( 738, 0, 60,  60, adelante);
-  myButtons.drawButton(FORWARD);
   HOME = myButtons.addButton( 676, 0, 60,  60, casa);
   myButtons.drawButton(HOME);
+  FORWARD = myButtons.addButton( 738, 0, 60,  60, adelante);
+  myButtons.drawButton(FORWARD);
 
   while (1)
   {
@@ -518,9 +529,10 @@ void	menu_estanqueidad(int cont, int cont2) {
     {
       pressed_button = myButtons.checkButtons();
 
-      //****bOTONES PWM1
+
 
       if (pressed_button == LLENADO_MARCHA) {
+        touch_click();
         myGLCD.clrScr();
         myGLCD.print("marcha llenado", 40, 210);
 
@@ -528,31 +540,36 @@ void	menu_estanqueidad(int cont, int cont2) {
       }
 
       if (pressed_button == LLENADO_PARO) {
+        touch_click();
         myGLCD.clrScr();
         myGLCD.print("marcha PARO", 40, 210);
 
 
       }
       if (pressed_button == VACIADO_MARCHA) {
+        touch_click();
         myGLCD.clrScr();
         myGLCD.print("VACIADO llenado", 40, 210);
 
 
       }
       if (pressed_button == VACIADO_PARO) {
+        touch_click();
         myGLCD.clrScr();
         myGLCD.print("VACIADO PARO", 40, 210);
 
       }
 
       if (pressed_button == HOME) {
+        touch_click();
         myGLCD.clrScr();
         menu_inicial(cont, cont2);
 
       }
 
       if (pressed_button == FORWARD) {
-          myButtons.deleteAllButtons();
+        touch_click();
+        myButtons.deleteAllButtons();
         myGLCD.clrScr();
         menu_regulacionAW4(cont, cont2);
 
@@ -586,27 +603,31 @@ void	menu_regulacionAW4(int cont, int cont2) {
   myButtons.deleteAllButtons();
   myGLCD.clrScr();
 
+  myGLCD.setColor(VGA_PURPLE);
+  myGLCD.setFont(BigFont);
+  myGLCD.fillRect(220, 0, 579, 26);
+  myGLCD.setBackColor(VGA_PURPLE);
+  myGLCD.setColor(VGA_WHITE);
+  myGLCD.print("REGULACION AW4", CENTER, 5);
+
   myGLCD.setColor(VGA_WHITE);
   myGLCD.setBackColor(VGA_BLUE);
   myGLCD.setFont(BigFont);
-  myGLCD.print("REGULACION AW4", CENTER, 5);
-  myGLCD.setFont(SmallFont);
-  myGLCD.print("PRESION ENTRADA TD1", 10, 50);
-  myGLCD.print("valor", 175, 50);
-  myGLCD.print("bar", 225, 50);
+  myGLCD.print("PRESION ENT TD1", 1, 90);
+  myGLCD.print("VALOR", 1, 110);
+  myGLCD.print("BAR", 85, 110);
   myGLCD.setColor(VGA_LIME);
-  myGLCD.fillCircle(270, 56, 15);
+  myGLCD.fillCircle(160, 125, 15);//X, Y , RADIO
 
   myGLCD.setColor(VGA_WHITE);
   myGLCD.setBackColor(VGA_BLUE);
   myGLCD.print("I.TRABAJO:700mA", CENTER, 50);
 
-  myGLCD.print("I.REAL:", 500, 50);
-  myGLCD.print("valor", 575, 50);
-  myGLCD.print("mA", 625, 50);
+  myGLCD.print("I.REAL:", 680, 90);
+  myGLCD.print("VALOR", 660, 110);
+  myGLCD.print("mA", 745, 110);
   myGLCD.setColor(VGA_LIME);
-  myGLCD.fillCircle(670, 56, 15);
-
+  myGLCD.fillCircle(630, 125, 15);
 
   myGLCD.setFont(BigFont);
   myGLCD.fillRect(20, 250, 250, 300);
@@ -634,17 +655,17 @@ void	menu_regulacionAW4(int cont, int cont2) {
   myButtons.setButtonColors(VGA_WHITE, VGA_GRAY, VGA_WHITE, VGA_BLUE, VGA_RED);
   myButtons.drawButton(VACIADO_PARO);
 
-  myGLCD.drawRect(300, 150, 430, 430);
+  myGLCD.setColor(VGA_WHITE);
+  myGLCD.setBackColor(VGA_BLUE);
+  myGLCD.drawRect(330, 150, 430, 430);
   myGLCD.print("10BAR", 435, 150);
   myGLCD.print("5BAR", 435, 280);
   myGLCD.print("0BAR", 435, 414);
 
-
-  HOME = myButtons.addButton( 1, 0, 60,  60, casa);
+  HOME = myButtons.addButton( 676, 0, 60,  60, casa);
   myButtons.drawButton(HOME);
-
-   BACK = myButtons.addButton( 63, 0, 60,  60, atras);
-   myButtons.drawButton(BACK);
+  BACK = myButtons.addButton( 738, 0, 60,  60, atras);
+  myButtons.drawButton(BACK);
 
   while (1)
   {
@@ -661,9 +682,10 @@ void	menu_regulacionAW4(int cont, int cont2) {
     {
       pressed_button = myButtons.checkButtons();
 
-      //****bOTONES PWM1
+
 
       if (pressed_button == LLENADO_MARCHA) {
+        touch_click();
         myGLCD.clrScr();
         myGLCD.print("marcha llenado", 40, 210);
 
@@ -671,32 +693,38 @@ void	menu_regulacionAW4(int cont, int cont2) {
       }
 
       if (pressed_button == LLENADO_PARO) {
+        touch_click();
         myGLCD.clrScr();
         myGLCD.print("marcha PARO", 40, 210);
 
 
       }
       if (pressed_button == VACIADO_MARCHA) {
+        touch_click();
         myGLCD.clrScr();
         myGLCD.print("VACIADO llenado", 40, 210);
 
 
       }
       if (pressed_button == VACIADO_PARO) {
+        touch_click();
         myGLCD.clrScr();
         myGLCD.print("VACIADO PARO", 40, 210);
 
       }
 
       if (pressed_button == HOME) {
+        touch_click();
         myGLCD.clrScr();
         menu_inicial(cont, cont2);
 
       }
 
       if (pressed_button == BACK) {
+        touch_click();
+        myButtons.deleteAllButtons();
         myGLCD.clrScr();
-        menu_estanqueidad(cont, cont2);
+        menu_regulacionAW4(cont, cont2);
 
       }
     }
@@ -716,4 +744,10 @@ void	lectura_analogica() {
   myGLCD.print("     ", 180, 250);
   myGLCD.printNumI(sensorTD1Value, 180, 250);
 
+}
+
+void	touch_click() {
+  digitalWrite(speakerPin, HIGH);
+  delay(50);
+  digitalWrite(speakerPin, LOW);
 }
