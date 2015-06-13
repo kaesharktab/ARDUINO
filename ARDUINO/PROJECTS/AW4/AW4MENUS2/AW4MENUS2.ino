@@ -35,21 +35,22 @@ extern uint8_t Dingbats1_XL[];
 
 int cont = 0;
 
-int EV1 = A6;
-int EV2 = A7;
-int EV3 = A8;
-int EV4 = A9;
-int EV5 = A10;
-int EV6 = A11;
+int EV1 = A6;              // Entrada digital para valvula  EV1 arduino mega A6
+int EV2 = A7;              // Entrada digital para valvula  EV2 arduino mega A7
+int EV3 = A8;              // Entrada digital para valvula  EV3 arduino mega A8
+int EV4 = A9;              // Entrada digital para valvula  EV4 arduino mega A9
+int EV5 = A10;             // Entrada digital para valvula  EV5 arduino mega A10
+int EV6 = A11;             // Entrada digital para valvula  EV6 arduino mega A11
 
 int sensorTD2 = A0;            // Entrada analogica A0 arduino mega pin0  sensor  TD2
 int sensorTD2AW4Value = 0;    // variable to store the value coming from the sensor
 int sensorTD1 = A1;          // Entrada analogica A1 arduino mega pin1  sensor  TD1
 int sensorTD1Value = 0;      // variable to store the value coming from the sensor
-TocaMelodia tocaMelodia(12);  // Inicializamos el altavoz, indicando en el pin12
 int speakerPin = 12;        // Inicializamos el altavoz, indicando en el pin12
 int pwm1_out = 9;    // Salida pwm1 para valvula de llenado aw4 EV7 arduino mega pin9
 int pwm2_out = 10;    // Salida pwm2 para valvula de vaciado aw4 EV8 arduino mega pin10
+
+TocaMelodia tocaMelodia(12);  // Inicializamos el altavoz, indicando en el pin12
 
 
 // Declare which fonts we will be using
@@ -120,13 +121,14 @@ void loop()
 void foto_presentacion() {
 
   //myFiles.loadBitmap(0, 0, picsize_x, picsize_y, "PIC301.RAW");
-  //  tocaMelodia.melodia(MELODIA_FANFARRIA);
+//   tocaMelodia.melodia(MELODIA_FANFARRIA);
 }
 
 //Menu inicial********************************************************************************************************************************
 
 void	menu_inicial(int cont, int cont2) {
-  digitalWrite(A2, HIGH);
+  myButtons.deleteAllButtons();
+  myGLCD.clrScr();
 #if defined(__AVR__)
 #define imagedatatype  unsigned int
 #elif defined(__PIC32MX__)
@@ -200,7 +202,7 @@ void	menu_inicial(int cont, int cont2) {
 void	menu_ajustes(int cont, int cont2) {
   myButtons.deleteAllButtons();
   myGLCD.clrScr();
-  digitalWrite(A2, LOW);
+
 #if defined(__AVR__)
 #define imagedatatype  unsigned int
 #elif defined(__PIC32MX__)
@@ -241,14 +243,14 @@ void	menu_ajustes(int cont, int cont2) {
   PW1_MENOS = myButtons.addButton( 165,  155, 60,  30, "-10");
 
   //*****************Botones vaciado*************************************
-  PW2_UP = myButtons.addButton( 350,  50, 120,  30, "PWM2 UP");  //X, Y , LARGO, ANCHO
-  PW2_MAS = myButtons.addButton( 500,  50, 60,  30, "+10");
-  PW2_0 = myButtons.addButton( 350,  85, 90,  30, "0 mA");
-  PW2_380 = myButtons.addButton( 500,  85, 120,  30, "380 mA");
-  PW2_700 = myButtons.addButton( 350,  120, 120,  30, "700 mA");
-  PW2_1A = myButtons.addButton( 500,  120, 90,  30, "1A");
-  PW2_DOWN = myButtons.addButton(350,  155, 130,  30, "PW2 DOWN");
-  PW2_MENOS = myButtons.addButton(500,  155, 60,  30, "-10");
+  PW2_UP = myButtons.addButton( 320,  50, 120,  30, "PWM2 UP");  //X, Y , LARGO, ANCHO
+  PW2_MAS = myButtons.addButton( 470,  50, 60,  30, "+10");
+  PW2_0 = myButtons.addButton( 320,  85, 90,  30, "0 mA");
+  PW2_380 = myButtons.addButton( 470,  85, 120,  30, "380 mA");
+  PW2_700 = myButtons.addButton( 320,  120, 120,  30, "700 mA");
+  PW2_1A = myButtons.addButton( 470,  120, 90,  30, "1A");
+  PW2_DOWN = myButtons.addButton(320,  155, 130,  30, "PW2 DOWN");
+  PW2_MENOS = myButtons.addButton(470,  155, 60,  30, "-10");
 
   HOME = myButtons.addButton(  738, 0, 60,  60, casa);
 
@@ -267,46 +269,57 @@ void	menu_ajustes(int cont, int cont2) {
   myGLCD.print("TD1:", 180, 230);
   myGLCD.printNumI(sensorTD2AW4Value, 180, 250);
 
-  myGLCD.print("EV1:", 61, 290);
-  EV1_ON = myButtons.addButton( 38, 316, 50,  30, "ON");//X, Y , LARGO, ANCHO
-  EV1_OFF = myButtons.addButton( 98,  316, 50,  30, "OFF");
+  myGLCD.print("EV1:", 61, 380);
+  EV1_ON = myButtons.addButton( 38, 404, 50,  30, "ON");//X, Y , LARGO, ANCHO
+  EV1_OFF = myButtons.addButton( 98,  404, 50,  30, "OFF");
 
 
-  myGLCD.print("EV2:", 183, 290);
-  EV2_ON = myButtons.addButton( 160,  316, 50,  30, "ON");
-  EV2_OFF = myButtons.addButton( 220,  316, 50,  30, "OFF");
+  myGLCD.print("EV2:", 183, 380);
+  EV2_ON = myButtons.addButton( 160,  404, 50,  30, "ON");
+  EV2_OFF = myButtons.addButton( 220,  404, 50,  30, "OFF");
 
 
-  myGLCD.print("EV3:", 305, 290);
-  EV3_ON = myButtons.addButton( 282,  316, 50,  30, "ON");
-  EV3_OFF = myButtons.addButton( 342,  316, 50,  30, "OFF");
+  myGLCD.print("EV3:", 305, 380);
+  EV3_ON = myButtons.addButton( 282,  404, 50,  30, "ON");
+  EV3_OFF = myButtons.addButton( 342,  404, 50,  30, "OFF");
 
 
-  myGLCD.print("EV4:", 427, 290);
-  EV4_ON = myButtons.addButton( 404,  316, 50,  30, "ON");
-  EV4_OFF = myButtons.addButton( 464,  316, 50,  30, "OFF");
+  myGLCD.print("EV4:", 427, 380);
+  EV4_ON = myButtons.addButton( 404,  404, 50,  30, "ON");
+  EV4_OFF = myButtons.addButton( 464,  404, 50,  30, "OFF");
 
 
-  myGLCD.print("EV5:", 549, 290);
-  EV5_ON = myButtons.addButton(526,  316, 50,  30, "ON");
-  EV5_OFF = myButtons.addButton(586,  316, 50,  30, "OFF");
+  myGLCD.print("EV5:", 549, 380);
+  EV5_ON = myButtons.addButton(526,  404, 50,  30, "ON");
+  EV5_OFF = myButtons.addButton(586,  404, 50,  30, "OFF");
 
 
-  myGLCD.print("EV6:", 671, 290);
-  EV6_ON = myButtons.addButton(648,  316, 50,  30, "ON");
-  EV6_OFF = myButtons.addButton(708,  316, 50,  30, "OFF");
+  myGLCD.print("EV6:", 671, 380);
+  EV6_ON = myButtons.addButton(648,  404, 50,  30, "ON");
+  EV6_OFF = myButtons.addButton(708,  404, 50,  30, "OFF");
 
 
   myButtons.setButtonColors(VGA_WHITE, VGA_GRAY, VGA_WHITE, VGA_BLUE, VGA_RED);
   myButtons.drawButtons();
 
   myGLCD.setColor(VGA_LIME);
-  myGLCD.fillCircle(94, 365, 15);//X, Y , RADIO
-  myGLCD.fillCircle(215, 365, 15);
-  myGLCD.fillCircle(337, 365, 15);
-  myGLCD.fillCircle(459, 365, 15);
-  myGLCD.fillCircle(581, 365, 15);
-  myGLCD.fillCircle(703, 365, 15);
+  myGLCD.fillCircle(94, 450, 15);//X, Y , RADIO
+  myGLCD.fillCircle(215, 450, 15);
+  myGLCD.fillCircle(337, 450, 15);
+  myGLCD.fillCircle(459, 450, 15);
+  myGLCD.fillCircle(581, 450, 15);
+  myGLCD.fillCircle(703, 450, 15);
+  
+  
+  myGLCD.setColor(VGA_WHITE);
+  myGLCD.setBackColor(VGA_BLUE);
+  myGLCD.drawRect(615, 80, 675, 422); //vumetros 1024 /3= 341  80+342 =422
+  myGLCD.drawRect(685, 80, 745, 422);
+  myGLCD.print("TD1", 616, 424);
+  myGLCD.print("TD2", 686, 424);
+  myGLCD.print("10B", 750, 80);
+  myGLCD.print("5B", 750, 211);
+  myGLCD.print("0B", 750, 404);
 
 
 
@@ -471,14 +484,89 @@ void	menu_ajustes(int cont, int cont2) {
         touch_click();
          digitalWrite(EV1, HIGH);
           myGLCD.setColor(VGA_LIME);
-          myGLCD.fillCircle(94, 365, 15);//X, Y , RADIO
+          myGLCD.fillCircle(94, 450, 15);//X, Y , RADIO
 
       }
       if (pressed_button == EV1_OFF) {
         touch_click();
          digitalWrite(EV1, LOW);
           myGLCD.setColor(VGA_RED);
-          myGLCD.fillCircle(94, 365, 15);//X, Y , RADIO
+          myGLCD.fillCircle(94, 450, 15);//X, Y , RADIO
+
+    }
+    
+                if (pressed_button == EV2_ON) {
+        touch_click();
+         digitalWrite(EV2, HIGH);
+          myGLCD.setColor(VGA_LIME);
+          myGLCD.fillCircle(215, 450, 15);//X, Y , RADIO
+
+      }
+      if (pressed_button == EV2_OFF) {
+        touch_click();
+         digitalWrite(EV2, LOW);
+          myGLCD.setColor(VGA_RED);
+          myGLCD.fillCircle(215, 450, 15);//X, Y , RADIO
+
+    }
+    
+                if (pressed_button == EV3_ON) {
+        touch_click();
+         digitalWrite(EV3, HIGH);
+          myGLCD.setColor(VGA_LIME);
+          myGLCD.fillCircle(337, 450, 15);//X, Y , RADIO
+
+      }
+      if (pressed_button == EV3_OFF) {
+        touch_click();
+         digitalWrite(EV3, LOW);
+          myGLCD.setColor(VGA_RED);
+          myGLCD.fillCircle(337, 450, 15);//X, Y , RADIO
+
+    }
+    
+                if (pressed_button == EV4_ON) {
+        touch_click();
+         digitalWrite(EV4, HIGH);
+          myGLCD.setColor(VGA_LIME);
+          myGLCD.fillCircle(459, 450, 15);//X, Y , RADIO
+
+      }
+      if (pressed_button == EV4_OFF) {
+        touch_click();
+         digitalWrite(EV4, LOW);
+          myGLCD.setColor(VGA_RED);
+          myGLCD.fillCircle(459, 450, 15);//X, Y , RADIO
+
+    }
+    
+                if (pressed_button == EV5_ON) {
+        touch_click();
+         digitalWrite(EV5, HIGH);
+          myGLCD.setColor(VGA_LIME);
+          myGLCD.fillCircle(581, 450, 15);//X, Y , RADIO
+
+      }
+      if (pressed_button == EV5_OFF) {
+        touch_click();
+         digitalWrite(EV5, LOW);
+          myGLCD.setColor(VGA_RED);
+          myGLCD.fillCircle(581, 450, 15);//X, Y , RADIO
+
+    }
+    
+                if (pressed_button == EV6_ON) {
+        touch_click();
+         digitalWrite(EV6, HIGH);
+          myGLCD.setColor(VGA_LIME);
+          myGLCD.fillCircle(703, 450, 15);//X, Y , RADIO
+
+      }
+      if (pressed_button == EV6_OFF) {
+        touch_click();
+         digitalWrite(EV6, LOW);
+          myGLCD.setColor(VGA_RED);
+          myGLCD.fillCircle(703, 450, 15);//X, Y , RADIO
 
     }
       
@@ -808,10 +896,26 @@ void	lectura_analogica() {
   sensorTD2AW4Value = analogRead(sensorTD2);
   myGLCD.print("     ", 40, 250);
   myGLCD.printNumI(sensorTD2AW4Value, 40, 250);
+  int vumeterTD2=(sensorTD2AW4Value/3+81);
+   myGLCD.printNumI(vumeterTD2, 40, 250);
+   
+   myGLCD.setColor(VGA_BLACK);
+  myGLCD.fillRect(616, 422, 674, 81);
+    myGLCD.setColor(VGA_WHITE);
+  myGLCD.fillRect(616, 422, 674, vumeterTD2);
 
+
+
+  
+  myGLCD.setColor(VGA_WHITE);
   sensorTD1Value = analogRead(sensorTD1);
   myGLCD.print("     ", 180, 250);
   myGLCD.printNumI(sensorTD1Value, 180, 250);
+    int vumeterTD1=(sensorTD2AW4Value/3+81);
+     myGLCD.setColor(VGA_BLACK);
+  myGLCD.fillRect(686, 422, 744, 81);
+    myGLCD.setColor(VGA_WHITE);
+  myGLCD.fillRect(686, 422, 745, vumeterTD1);
 
 }
 
