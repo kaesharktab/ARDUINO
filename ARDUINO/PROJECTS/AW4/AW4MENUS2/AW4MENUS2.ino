@@ -42,7 +42,7 @@ int EV4 = A9;              // Entrada digital para valvula  EV4 arduino mega A9
 int EV5 = A10;             // Entrada digital para valvula  EV5 arduino mega A10
 int EV6 = A11;             // Entrada digital para valvula  EV6 arduino mega A11
 
-int sensorTD2 = A0;            // Entrada analogica A0 arduino mega pin0  sensor  TD2
+int sensorTD2 = A2;            // Entrada analogica A0 arduino mega pin0  sensor  TD2
 int sensorTD2AW4Value = 0;    // variable to store the value coming from the sensor
 int sensorTD1 = A1;          // Entrada analogica A1 arduino mega pin1  sensor  TD1
 int sensorTD1Value = 0;      // variable to store the value coming from the sensor
@@ -896,26 +896,11 @@ void	lectura_analogica() {
   sensorTD2AW4Value = analogRead(sensorTD2);
   myGLCD.print("     ", 40, 250);
   myGLCD.printNumI(sensorTD2AW4Value, 40, 250);
-  int vumeterTD2=(sensorTD2AW4Value/3+81);
-   myGLCD.printNumI(vumeterTD2, 40, 250);
-   
-   myGLCD.setColor(VGA_BLACK);
-  myGLCD.fillRect(616, 422, 674, 81);
-    myGLCD.setColor(VGA_WHITE);
-  myGLCD.fillRect(616, 422, 674, vumeterTD2);
 
-
-
-  
-  myGLCD.setColor(VGA_WHITE);
   sensorTD1Value = analogRead(sensorTD1);
   myGLCD.print("     ", 180, 250);
   myGLCD.printNumI(sensorTD1Value, 180, 250);
-    int vumeterTD1=(sensorTD2AW4Value/3+81);
-     myGLCD.setColor(VGA_BLACK);
-  myGLCD.fillRect(686, 422, 744, 81);
-    myGLCD.setColor(VGA_WHITE);
-  myGLCD.fillRect(686, 422, 745, vumeterTD1);
+
 
 }
 
